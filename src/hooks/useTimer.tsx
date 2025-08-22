@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   differenceInDays,
   differenceInHours,
@@ -6,6 +6,7 @@ import {
   differenceInSeconds,
   isPast,
 } from "date-fns";
+import { atom, useAtomValue, useSetAtom } from "jotai";
 
 type Duration = {
   days: number;
@@ -14,28 +15,31 @@ type Duration = {
   seconds: number;
 };
 
-const getDifference = (target: Date) => {
+const tickAtom = atom(new Date());
+
+export const useGlobalTicker = () => {
+  const setTicker = useSetAtom(tickAtom);
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setTicker(new Date());
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [setTicker]);
+};
+
+const getDifference = (current: Date, target: Date) => {
   if (isPast(target)) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
 
-  const now = new Date();
   return {
-    days: differenceInDays(target, now),
-    hours: differenceInHours(target, now) % 24,
-    minutes: differenceInMinutes(target, now) % 60,
-    seconds: differenceInSeconds(target, now) % 60,
+    days: differenceInDays(target, current),
+    hours: differenceInHours(target, current) % 24,
+    minutes: differenceInMinutes(target, current) % 60,
+    seconds: differenceInSeconds(target, current) % 60,
   };
 };
 
 export const useTimer = (target: Date): Duration => {
-  const [difference, setDifference] = useState(getDifference(target));
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setDifference(getDifference(target));
-    }, 250);
-
-    return () => clearInterval(intervalId);
-  }, [setDifference, target]);
-
-  return difference;
+  const current = useAtomValue(tickAtom);
+  return getDifference(current, target);
 };

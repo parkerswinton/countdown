@@ -14,14 +14,20 @@ export const App = () => {
   useGlobalTicker();
 
   const handleDragEnd = (e: DragEndEvent) => {
-    console.log(e);
+    setTimers((prev) =>
+      prev.map((t) =>
+        t.id === e.active.id
+          ? { ...t, x: t.x + e.delta.x, y: t.y + e.delta.y }
+          : t,
+      ),
+    );
   };
 
   return (
     <div className="h-screen w-screen overflow-hidden">
       <DndContext onDragEnd={handleDragEnd}>
         {timers.map((t) => (
-          <Draggable key={t.id} id={t.id}>
+          <Draggable key={t.id} id={t.id} x={t.x} y={t.y}>
             <Digital timer={t} />
           </Draggable>
         ))}

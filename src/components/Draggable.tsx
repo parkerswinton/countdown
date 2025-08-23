@@ -3,20 +3,29 @@ import type { ReactNode } from "react";
 
 type DraggableProps = {
   id: string;
+  x: number;
+  y: number;
   children: ReactNode;
 };
 
-export const Draggable = ({ id, children }: DraggableProps) => {
+export const Draggable = ({ id, x, y, children }: DraggableProps) => {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({ id });
 
-  const style = transform
-    ? {
-        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-      }
-    : undefined;
-
   return (
-    <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
+    <div
+      ref={setNodeRef}
+      className={`absolute top-[${y}px] left-[${x}px]`}
+      style={{
+        position: "absolute",
+        top: y,
+        left: x,
+        transform: transform
+          ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
+          : undefined,
+      }}
+      {...listeners}
+      {...attributes}
+    >
       {children}
     </div>
   );

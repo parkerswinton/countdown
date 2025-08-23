@@ -55,7 +55,7 @@ export const AddTimerDialog = ({
   };
 
   const onSubmit = (vals: z.infer<typeof formSchema>) => {
-    onAdd({ ...vals, id: crypto.randomUUID() });
+    onAdd({ ...vals, x: 0, y: 0, id: crypto.randomUUID() });
     handleOpenChange(false);
   };
 

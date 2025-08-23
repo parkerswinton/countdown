@@ -5,15 +5,17 @@ import { Digital } from "./components/timers/Digital";
 import { atomWithStorage } from "jotai/utils";
 import { useAtom } from "jotai";
 import { useGlobalTicker } from "./hooks/useTimer";
+import { AddTimerDialog } from "./components/AddTimerDialog";
 
 const timersAtom = atomWithStorage<Timer[]>("timers", []);
 
 export const App = () => {
+  const [timers, setTimers] = useAtom(timersAtom);
+  useGlobalTicker();
+
   const handleDragEnd = (e: DragEndEvent) => {
     console.log(e);
   };
-  useGlobalTicker();
-  const [timers, setTimers] = useAtom(timersAtom);
 
   return (
     <div className="h-screen w-screen overflow-hidden">
@@ -23,18 +25,8 @@ export const App = () => {
             <Digital timer={t} />
           </Draggable>
         ))}
-
-        <button
-          onClick={() =>
-            setTimers([
-              ...timers,
-              { id: "timer1", target: new Date(2025, 10, 12, 4, 7, 5) },
-            ])
-          }
-        >
-          HELLO
-        </button>
       </DndContext>
+      <AddTimerDialog onAdd={(newTimer) => setTimers([...timers, newTimer])} />
     </div>
   );
 };

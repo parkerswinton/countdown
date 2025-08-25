@@ -50,6 +50,8 @@ export const DatePicker = <
             mode="single"
             selected={field.value}
             onSelect={field.onChange}
+            startMonth={new Date()}
+            endMonth={new Date(new Date().getFullYear() + 10, 11)}
             required
             disabled={(date) => date < endOfYesterday()}
             captionLayout="dropdown"

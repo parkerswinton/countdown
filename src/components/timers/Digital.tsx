@@ -1,9 +1,25 @@
-import { useTimer } from "@/hooks/useTimer";
+import { useTimer, type Duration } from "@/hooks/useTimer";
 import type { Timer } from "@/lib/types";
 
-export const Digital = ({ timer }: { timer: Omit<Timer, "x" | "y"> }) => {
+const formatTimer = (dur: Duration) => {
+  return `${String(dur.days).padStart(2, "0")}:${String(dur.hours).padStart(2, "0")}:${String(dur.minutes).padStart(2, "0")}:${String(dur.seconds).padStart(2, "0")}`;
+};
+
+export const Digital = ({
+  timer,
+}: {
+  timer: Omit<Timer, "x" | "y" | "variant">;
+}) => {
   const diff = useTimer(timer.target);
   return (
-    <h1 className="font-dseg text-4xl">{`${String(diff.days).padStart(2, "0")}:${String(diff.hours).padStart(2, "0")}:${String(diff.minutes).padStart(2, "0")}:${String(diff.seconds).padStart(2, "0")}`}</h1>
+    <div className="flex flex-col rounded-sm border-2 border-zinc-400 bg-zinc-800 p-2 select-none">
+      <p className="font-dseg text-4xl text-red-500">{formatTimer(diff)}</p>
+      <div className="flex justify-end gap-[58px] pr-1 text-xs font-bold text-zinc-200">
+        <p>d</p>
+        <p>h</p>
+        <p>m</p>
+        <p>s</p>
+      </div>
+    </div>
   );
 };

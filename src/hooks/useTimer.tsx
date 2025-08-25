@@ -8,7 +8,7 @@ import {
 } from "date-fns";
 import { atom, useAtomValue, useSetAtom } from "jotai";
 
-type Duration = {
+export type Duration = {
   days: number;
   hours: number;
   minutes: number;

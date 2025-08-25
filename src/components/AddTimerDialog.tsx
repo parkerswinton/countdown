@@ -59,13 +59,14 @@ export const AddTimerDialog = ({
     handleOpenChange(false);
   };
 
+  const label = form.watch("label");
   const target = form.watch("target");
   const variant = form.watch("variant");
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button size="icon" className="z-50 size-8">
+        <Button size="icon" variant="outline" className="z-50 size-8">
           <Plus />
         </Button>
       </DialogTrigger>
@@ -133,9 +134,9 @@ export const AddTimerDialog = ({
                 )}
               />
               <div className="flex flex-col gap-2">
-                <FormLabel>Preview</FormLabel>
+                <FormLabel className="self-end">Preview</FormLabel>
                 {variant === "digital" ? (
-                  <Digital timer={{ id: "preview", target }} />
+                  <Digital timer={{ id: "preview", target, label }} />
                 ) : null}
               </div>
             </div>

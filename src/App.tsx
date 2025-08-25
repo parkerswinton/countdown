@@ -6,6 +6,8 @@ import { atomWithStorage } from "jotai/utils";
 import { useAtom } from "jotai";
 import { useGlobalTicker } from "./hooks/useTimer";
 import { AddTimerDialog } from "./components/AddTimerDialog";
+import { ThemeProvider } from "./components/ui/theme-provider";
+import { ThemeToggle } from "./components/ui/theme-toggle";
 
 const timersAtom = atomWithStorage<Timer[]>("timers", []);
 
@@ -24,15 +26,20 @@ export const App = () => {
   };
 
   return (
-    <div className="h-screen w-screen overflow-hidden">
-      <DndContext onDragEnd={handleDragEnd}>
-        {timers.map((t) => (
-          <Draggable key={t.id} id={t.id} x={t.x} y={t.y}>
-            <Digital timer={t} />
-          </Draggable>
-        ))}
-      </DndContext>
-      <AddTimerDialog onAdd={(newTimer) => setTimers([...timers, newTimer])} />
-    </div>
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <div className="h-screen w-screen overflow-hidden">
+        <DndContext onDragEnd={handleDragEnd}>
+          {timers.map((t) => (
+            <Draggable key={t.id} id={t.id} x={t.x} y={t.y}>
+              {t.variant === "digital" ? <Digital timer={t} /> : null}
+            </Draggable>
+          ))}
+        </DndContext>
+        <AddTimerDialog
+          onAdd={(newTimer) => setTimers([...timers, newTimer])}
+        />
+        <ThemeToggle />
+      </div>
+    </ThemeProvider>
   );
 };

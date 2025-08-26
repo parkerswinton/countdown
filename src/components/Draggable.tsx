@@ -14,7 +14,6 @@ export const Draggable = ({ id, x, y, children }: DraggableProps) => {
   return (
     <div
       ref={setNodeRef}
-      className={`absolute top-[${y}px] left-[${x}px]`}
       style={{
         position: "absolute",
         top: y,

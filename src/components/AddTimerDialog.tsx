@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import type { Timer } from "@/lib/types";
+import { labelPositions, timerVariants, type Timer } from "@/lib/types";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -29,8 +29,9 @@ import { isPast } from "date-fns";
 
 const formSchema = z.object({
   label: z.string().min(1),
+  labelPosition: z.enum(labelPositions),
   target: z.date().refine((date) => !isPast(date)),
-  variant: z.enum(["digital", "other"]),
+  variant: z.enum(timerVariants),
 });
 
 export const AddTimerDialog = ({
@@ -44,6 +45,7 @@ export const AddTimerDialog = ({
     resolver: zodResolver(formSchema),
     defaultValues: {
       label: "",
+      labelPosition: "top" as const,
       target: new Date(),
       variant: "digital" as const,
     },
@@ -60,13 +62,14 @@ export const AddTimerDialog = ({
   };
 
   const label = form.watch("label");
+  const labelPosition = form.watch("labelPosition");
   const target = form.watch("target");
   const variant = form.watch("variant");
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button size="icon" variant="outline" className="z-50 size-8">
+        <Button size="icon" variant="outline" className="bg-background size-8">
           <Plus />
         </Button>
       </DialogTrigger>
@@ -103,7 +106,7 @@ export const AddTimerDialog = ({
                 )}
               />
             </div>
-            <div className="flex items-start justify-between">
+            <div className="flex items-start gap-6">
               <FormField
                 control={form.control}
                 name="variant"
@@ -133,12 +136,43 @@ export const AddTimerDialog = ({
                   </FormItem>
                 )}
               />
-              <div className="flex flex-col gap-2">
-                <FormLabel className="self-end">Preview</FormLabel>
-                {variant === "digital" ? (
-                  <Digital timer={{ id: "preview", target, label }} />
-                ) : null}
-              </div>
+              <FormField
+                control={form.control}
+                name="labelPosition"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Label Position</FormLabel>
+                    <FormControl>
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className="flex flex-col"
+                      >
+                        <FormItem className="flex items-center gap-2">
+                          <FormControl>
+                            <RadioGroupItem value="top" />
+                          </FormControl>
+                          <FormLabel className="font-normal">Top</FormLabel>
+                        </FormItem>
+                        <FormItem className="flex items-center gap-2">
+                          <FormControl>
+                            <RadioGroupItem value="bottom" />
+                          </FormControl>
+                          <FormLabel className="font-normal">Bottom</FormLabel>
+                        </FormItem>
+                      </RadioGroup>
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="flex flex-col items-baseline gap-2">
+              <FormLabel>Preview</FormLabel>
+              {variant === "digital" ? (
+                <Digital
+                  timer={{ id: "preview", target, label, labelPosition }}
+                />
+              ) : null}
             </div>
             <DialogFooter>
               <DialogClose asChild>

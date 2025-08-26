@@ -35,10 +35,12 @@ export const App = () => {
             </Draggable>
           ))}
         </DndContext>
-        <AddTimerDialog
-          onAdd={(newTimer) => setTimers([...timers, newTimer])}
-        />
-        <ThemeToggle />
+        <div className="absolute top-2 right-2 z-50 flex gap-1">
+          <AddTimerDialog
+            onAdd={(newTimer) => setTimers([...timers, newTimer])}
+          />
+          <ThemeToggle />
+        </div>
       </div>
     </ThemeProvider>
   );

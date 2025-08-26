@@ -12,13 +12,24 @@ export const Digital = ({
 }) => {
   const diff = useTimer(timer.target);
   return (
-    <div className="flex flex-col rounded-sm border-2 border-zinc-400 bg-zinc-800 p-2 select-none">
-      <p className="font-dseg text-4xl text-red-500">{formatTimer(diff)}</p>
-      <div className="flex justify-end gap-[58px] pr-1 text-xs font-bold text-zinc-200">
-        <p>d</p>
-        <p>h</p>
-        <p>m</p>
-        <p>s</p>
+    <div className="flex flex-col select-none">
+      {timer.label && (
+        <p
+          className={`self-center border-1 border-zinc-400 ${timer.labelPosition === "bottom" ? "order-last rounded-b-sm border-t-0" : "rounded-t-sm border-b-0"} bg-zinc-800 px-2 text-2xl tracking-wide text-zinc-100`}
+        >
+          {timer.label}
+        </p>
+      )}
+      <div className="flex flex-col rounded-sm border-1 border-zinc-400 bg-zinc-800 p-2 shadow">
+        <p className="font-dseg self-end text-4xl text-red-500">
+          {formatTimer(diff)}
+        </p>
+        <div className="flex justify-end gap-[58px] pr-1 text-xs font-bold text-zinc-200">
+          <p>d</p>
+          <p>h</p>
+          <p>m</p>
+          <p>s</p>
+        </div>
       </div>
     </div>
   );
